@@ -111,12 +111,9 @@ router.post("/login", validate(loginSchema), UserController.login);
  *         description: Token não fornecido
  *       403:
  *         description: Token inválido
- *       404:
- *         description: Usuário não encontrado
  *       500:
  *         description: Erro interno no servidor
  */
-
 router.get("/", UserController.getAllUsers);
 
 /**

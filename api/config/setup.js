@@ -19,7 +19,7 @@ const setupDatabase = async () => {
 
     importModels();
 
-    await sequelize.sync({ alter: true });
+    await sequelize.sync();
     console.log('✅ Tabelas sincronizadas com sucesso.');
   } catch (error) {
     console.error('❌ Erro ao conectar ou sincronizar o banco de dados:', error);

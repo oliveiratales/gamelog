@@ -46,8 +46,8 @@ class IgdbService {
         query,
         {
           headers: {
-            "Client-ID": clientId,
-            Authorization: `Bearer ${token}`,
+            'Client-ID': clientId,
+            'Authorization': `Bearer ${token}`,
           },
         }
       );

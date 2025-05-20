@@ -1,11 +1,15 @@
-const IgdbService = require("./services/igdbService");
+const IgdbService = require("./igdbService");
 
 class GameService {
-  static async buscarJogos() {
-    // Incluir paginação
-    const query = `fields name,genres.name,release_dates.date; limit 10; sort popularity desc;`;
-    const jogos = await IgdbService.getGames(query);
-    console.log(jogos);
+  static async getGamesList(limit) {
+    const query = `
+      fields name, cover.url, platforms.name, summary, total_rating;
+      sort total_rating_count desc;
+      limit ${limit};
+    `;
+
+    const games = await IgdbService.getGames(query);
+    return { games };
   }
 }
 
