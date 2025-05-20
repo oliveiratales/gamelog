@@ -1,6 +1,8 @@
 const express = require("express");
 const UserController = require("../controllers/userController");
 const router = express.Router();
+const validate = require("../middlewares/validateMiddleware");
+const { registerSchema, loginSchema } = require("../schemas/userSchemas");
 
 /**
  * @swagger
@@ -43,7 +45,7 @@ const router = express.Router();
  *       500:
  *         description: Erro interno no servidor
  */
-router.post("/register", UserController.register);
+router.post("/register", validate(registerSchema), UserController.register);
 
 /**
  * @swagger
@@ -79,7 +81,29 @@ router.post("/register", UserController.register);
  *       500:
  *         description: Erro interno no servidor
  */
-router.post("/login", UserController.login);
+router.post("/login", validate(loginSchema), UserController.login);
+
+/**
+ * @swagger
+ * /api/users:
+ *   get:
+ *     summary: Lista todos os usuários ativos
+ *     tags: [Users]
+ *     responses:
+ *       200:
+ *         description: Lista de usuários
+ *       400:
+ *         description: Erro na requisição
+ *       401:
+ *         description: Token não fornecido
+ *       403:
+ *         description: Token inválido
+ *       404:
+ *         description: Usuário não encontrado
+ *       500:
+ *         description: Erro interno no servidor
+ */
+router.get("/", UserController.getAllUsers);
 
 /**
  * @swagger
@@ -92,7 +116,7 @@ router.post("/login", UserController.login);
  *         name: id
  *         required: true
  *         schema:
- *           type: integer
+ *           type: string
  *         description: ID do usuário
  *     responses:
  *       200:

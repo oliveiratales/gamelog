@@ -1,7 +1,7 @@
 const UserService = require("../services/userService");
 
 class UserController {
-  static async register(req, res) {
+  static async register(req, res, next) {
     try {
       const { name, email, password } = req.body;
       const user = await UserService.createUser({ name, email, password });
@@ -12,11 +12,12 @@ class UserController {
         .status(201)
         .json({ message: "Usuário criado com sucesso.", userWithoutPassword });
     } catch (error) {
-      res.status(400).json({ error: "Erro na requisição: " + error.message });
+      error.statusCode = error.statusCode;
+      next(error);
     }
   }
 
-  static async login(req, res) {
+  static async login(req, res, next) {
     try {
       const { email, password } = req.body;
       const { user, token } = await UserService.authenticate(email, password);
@@ -29,51 +30,70 @@ class UserController {
         token,
       });
     } catch (error) {
-      if (error.message === "Usuário não encontrado") {
-        return res.status(404).json({ error: error.message });
-      }
-      if (error.message === "Senha incorreta") {
-        return res.status(401).json({ error: error.message });
-      }
-      return res.status(500).json({ error: "Erro interno no servidor" });
+      if (error.message === "Usuário não encontrado") error.statusCode = 404;
+      else if (error.message === "Senha incorreta") error.statusCode = 401;
+      else error.statusCode = 500;
+      next(error);
     }
   }
 
-  static async getUser(req, res) {
+  static async getAllUsers(req, res, next) {
+    try {
+      const users = await UserService.getAllUsers();
+      res.json(users);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async getUser(req, res, next) {
     try {
       const user = await UserService.getUserById(req.params.id);
-      if (!user)
-        return res.status(404).json({ message: "Usuário não encontrado" });
-      res.json(user);
+      const userWithoutPassword = { ...user.dataValues };
+      delete userWithoutPassword.password;
+
+      if (!user) {
+        const error = new Error("Usuário não encontrado");
+        error.statusCode = 404;
+        throw error;
+      }
+      res.json(userWithoutPassword);
     } catch (error) {
-      res.status(400).json({ error: "Erro na requisição: " + error.message });
+      error.statusCode = error.statusCode;
+      next(error);
     }
   }
 
-  static async updateUser(req, res) {
+  static async updateUser(req, res, next) {
     try {
       const updatedUser = await UserService.updateUser(req.params.id, req.body);
+      if (!updatedUser) {
+        const error = new Error("Usuário não encontrado");
+        error.statusCode = 404;
+        throw error;
+      }
       res.json({
         message: "Usuário atualizado com sucesso",
         user: updatedUser,
       });
     } catch (error) {
-      if (error.message === "Usuário não encontrado") {
-        return res.status(404).json({ error: error.message });
-      }
-      res.status(400).json({ error: error.message });
+      error.statusCode = error.statusCode;
+      next(error);
     }
   }
 
-  static async inactivateUser(req, res) {
+  static async inactivateUser(req, res, next) {
     try {
-      await UserService.inactivateUser(req.params.id);
+      const result = await UserService.inactivateUser(req.params.id);
+      if (!result) {
+        const error = new Error("Usuário não encontrado");
+        error.statusCode = 404;
+        throw error;
+      }
       res.json({ message: "Usuário inativado com sucesso" });
     } catch (error) {
-      if (error.message === "Usuário não encontrado") {
-        return res.status(404).json({ error: error.message });
-      }
-      res.status(400).json({ error: error.message });
+      error.statusCode = error.statusCode;
+      next(error);
     }
   }
 }

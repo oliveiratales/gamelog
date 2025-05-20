@@ -15,6 +15,14 @@ class UserService {
     return await User.findOne({ where: { email, active: true } });
   }
 
+  static async getAllUsers() {
+    const users = await User.findAll({
+      where: { active: true },
+      attributes: { exclude: ["password"] },
+    });
+    return users;
+  }
+
   static async getUserById(id) {
     return await User.findOne({ where: { id, active: true } });
   }
@@ -38,7 +46,7 @@ class UserService {
 
   static async updateUser(id, data) {
     const user = await this.getUserById(id);
-    if (!user) throw new Error('Usuário não encontrado');
+    if (!user) throw new Error("Usuário não encontrado");
 
     await user.update(data);
     return user;
@@ -46,7 +54,7 @@ class UserService {
 
   static async inactivateUser(id) {
     const user = await this.getUserById(id);
-    if (!user) throw new Error('Usuário não encontrado');
+    if (!user) throw new Error("Usuário não encontrado");
 
     await user.update({ active: false });
     return user;

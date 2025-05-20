@@ -3,6 +3,8 @@ const setupDatabase = require("./config/setup");
 const swaggerUi = require("swagger-ui-express");
 const swaggerSpec = require("./docs/swagger");
 const authenticateToken = require("./middlewares/authenticateToken");
+const errorHandler = require("./middlewares/errorHandler");
+
 require("dotenv").config();
 
 const app = express();
@@ -32,6 +34,9 @@ app.use("/api", routes);
 app.use((req, res) => {
   res.status(404).json({ error: "Rota não encontrada" });
 });
+
+// Middleware de erros
+app.use(errorHandler);
 
 setupDatabase().then(() => {
   const PORT = process.env.PORT || 3000;
