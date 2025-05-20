@@ -46,6 +46,8 @@ DB_NAME=nome_banco
 DB_PORT=3306
 JWT_SECRET=sua_chave_secreta
 NODE_ENV=development
+CLIENT_ID=twitch_client_id
+CLIENT_SECRET=twitch_client_secret
 
 # Inicie o servidor
 npm run dev
@@ -90,7 +92,13 @@ DB_NAME=banco_nome
 DB_PORT=3306
 JWT_SECRET=sua_chave_secreta
 NODE_ENV=development
+CLIENT_ID=twitch_client_id
+CLIENT_SECRET=twitch_client_secret
 ```
+
+OBS.: Acesse o Twitch Developers para extrair o Client ID e Client Secret. 
+
+Twitch Developers Docs: https://api-docs.igdb.com/?javascript#getting-started
 
 ---
 
