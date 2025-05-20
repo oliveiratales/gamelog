@@ -1,6 +1,5 @@
 const express = require("express");
 const UserController = require("../controllers/userController");
-
 const router = express.Router();
 
 /**
@@ -41,6 +40,8 @@ const router = express.Router();
  *         description: Usuário criado com sucesso
  *       400:
  *         description: Erro na requisição
+ *       500:
+ *         description: Erro interno no servidor
  */
 router.post("/register", UserController.register);
 
@@ -69,8 +70,14 @@ router.post("/register", UserController.register);
  *     responses:
  *       200:
  *         description: Login realizado com sucesso
+ *       400:
+ *         description: Erro na requisição
  *       401:
- *         description: Credenciais inválidas
+ *         description: Senha incorreta
+ *       404:
+ *         description: Usuário não encontrado
+ *       500:
+ *         description: Erro interno no servidor
  */
 router.post("/login", UserController.login);
 
@@ -90,8 +97,16 @@ router.post("/login", UserController.login);
  *     responses:
  *       200:
  *         description: Usuário encontrado
+ *       400:
+ *         description: Erro na requisição
+ *       401:
+ *         description: Token não fornecido
+ *       403:
+ *         description: Token inválido
  *       404:
  *         description: Usuário não encontrado
+ *       500:
+ *         description: Erro interno no servidor
  */
 router.get("/:id", UserController.getUser);
 
@@ -126,11 +141,17 @@ router.get("/:id", UserController.getUser);
  *                 example: novaSenha123
  *     responses:
  *       200:
- *         description: Usuário atualizado com sucesso
+ *         description: Usuário encontrado
  *       400:
  *         description: Erro na requisição
+ *       401:
+ *         description: Token não fornecido
+ *       403:
+ *         description: Token inválido
  *       404:
  *         description: Usuário não encontrado
+ *       500:
+ *         description: Erro interno no servidor
  */
 router.put("/:id", UserController.updateUser);
 
@@ -149,9 +170,17 @@ router.put("/:id", UserController.updateUser);
  *         description: ID do usuário a ser inativado
  *     responses:
  *       200:
- *         description: Usuário inativado com sucesso
+ *         description: Usuário encontrado
+ *       400:
+ *         description: Erro na requisição
+ *       401:
+ *         description: Token não fornecido
+ *       403:
+ *         description: Token inválido
  *       404:
  *         description: Usuário não encontrado
+ *       500:
+ *         description: Erro interno no servidor
  */
 router.delete("/:id", UserController.inactivateUser);
 

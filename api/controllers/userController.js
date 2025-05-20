@@ -10,9 +10,9 @@ class UserController {
 
       res
         .status(201)
-        .json({ message: "Usuário criado com sucesso", userWithoutPassword });
+        .json({ message: "Usuário criado com sucesso.", userWithoutPassword });
     } catch (error) {
-      res.status(400).json({ error: error.message });
+      res.status(400).json({ error: "Erro na requisição: " + error.message });
     }
   }
 
@@ -46,7 +46,7 @@ class UserController {
         return res.status(404).json({ message: "Usuário não encontrado" });
       res.json(user);
     } catch (error) {
-      res.status(400).json({ error: error.message });
+      res.status(400).json({ error: "Erro na requisição: " + error.message });
     }
   }
 
