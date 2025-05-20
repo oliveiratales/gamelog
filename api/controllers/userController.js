@@ -39,8 +39,11 @@ class UserController {
 
   static async getAllUsers(req, res, next) {
     try {
-      const users = await UserService.getAllUsers();
-      res.json(users);
+      const page = parseInt(req.query.page) || 1;
+      const limit = parseInt(req.query.limit) || 10;
+
+      const result = await UserService.getAllUsers(page, limit);
+      res.json(result);
     } catch (error) {
       next(error);
     }

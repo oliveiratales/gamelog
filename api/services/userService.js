@@ -15,12 +15,21 @@ class UserService {
     return await User.findOne({ where: { email, active: true } });
   }
 
-  static async getAllUsers() {
-    const users = await User.findAll({
+  static async getAllUsers(page = 1, limit = 10) {
+    const offset = (page - 1) * limit;
+    const { count, rows } = await User.findAndCountAll({
       where: { active: true },
       attributes: { exclude: ["password"] },
+      limit,
+      offset,
     });
-    return users;
+
+    return {
+      totalItems: count,
+      totalPages: Math.ceil(count / limit),
+      currentPage: page,
+      users: rows,
+    };
   }
 
   static async getUserById(id) {

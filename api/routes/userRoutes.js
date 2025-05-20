@@ -87,8 +87,21 @@ router.post("/login", validate(loginSchema), UserController.login);
  * @swagger
  * /api/users:
  *   get:
- *     summary: Lista todos os usuários ativos
+ *     summary: Lista todos os usuários ativos com paginação
  *     tags: [Users]
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *         description: Número da página
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           example: 10
+ *         description: Número de usuários por página
  *     responses:
  *       200:
  *         description: Lista de usuários
@@ -103,6 +116,7 @@ router.post("/login", validate(loginSchema), UserController.login);
  *       500:
  *         description: Erro interno no servidor
  */
+
 router.get("/", UserController.getAllUsers);
 
 /**
