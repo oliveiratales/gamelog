@@ -1,57 +1,30 @@
-# 🧩 Projeto NomeDoSeuProjeto
+# 🎮 GameLog
 
-Bem-vindo ao repositório oficial do **NomeDoSeuProjeto** — uma solução completa composta por uma **API robusta (Node.js + Sequelize + MySQL)** e uma **aplicação frontend moderna (React ou outra tecnologia)**. Este projeto visa *[descrever brevemente o objetivo do projeto, ex: "gerenciar equipamentos em tempo real para múltiplos clientes"]*.
-
----
-
-## 🗂 Estrutura do Projeto
-
-```
-├── api/           # Backend - Node.js, Express, Sequelize
-│   ├── controllers/
-│   ├── models/
-│   ├── routes/
-│   ├── services/
-│   ├── config/
-│   └── ...
-├── app/           # Frontend - React ou outro framework
-│   ├── src/
-│   ├── public/
-│   └── ...
-├── .env
-├── .gitignore
-└── README.md
-```
+Bem-vindo ao repositório oficial do **GameLog**, plataforma criada para ajudar você a organizar e registrar sua jornada no mundo dos games. Com ele, você pode catalogar os jogos que já jogou, registrar avaliações e comentários, e ainda descobrir novas aventuras para adicionar à sua lista.
 
 ---
 
 ## ⚙️ Tecnologias Utilizadas
 
-### API (Backend)
+### API (Backend) + IGDB API (Externa)
 - Node.js
 - Express
 - Sequelize
 - MySQL
 - dotenv
 - Swagger (documentação da API)
+- Jest (testes)
 
 ### APP (Frontend)
-- React *(ou outro framework moderno)*
+- React
 - Axios
 - React Router
 - Formik + Yup
+- MUI
 
 ---
 
 ## 🚀 Como Executar o Projeto
-
-### Pré-requisitos
-
-- Node.js ≥ 18
-- MySQL ≥ 5.7
-- Yarn ou NPM
-
----
 
 ### 📦 Configuração do Backend (API)
 
@@ -71,9 +44,8 @@ DB_USER=root
 DB_PASSWORD=sua_senha
 DB_NAME=nome_banco
 DB_PORT=3306
-
-# Execute as migrations (caso existam)
-npx sequelize-cli db:migrate
+JWT_SECRET=sua_chave_secreta
+NODE_ENV=development
 
 # Inicie o servidor
 npm run dev
@@ -116,31 +88,9 @@ DB_USER=root
 DB_PASSWORD=senha
 DB_NAME=banco_nome
 DB_PORT=3306
-
 JWT_SECRET=sua_chave_secreta
+NODE_ENV=development
 ```
-
----
-
-## 🛠 Funcionalidades
-
-- [x] Cadastro e login de usuários
-- [x] CRUD de clientes e localidades
-- [x] Gerenciamento de equipamentos
-- [x] Controle de versões de firmware
-- [x] Relatórios de alarmes e manutenção
-- [ ] Integração com notificações
-- [ ] Dashboard com KPIs
-
----
-
-## ✅ Boas Práticas Adotadas
-
-- Separação por camadas (Controller, Service, Repository)
-- Uso de DTOs (Data Transfer Objects)
-- Validação com Yup e middleware
-- Logs centralizados
-- Arquitetura escalável e modular
 
 ---
 
@@ -149,22 +99,3 @@ JWT_SECRET=sua_chave_secreta
 ```bash
 # Em breve: testes unitários e de integração
 ```
-
----
-
-## 👥 Contribuidores
-
-- [Seu Nome](https://github.com/seuusuario) — Desenvolvedor Backend
-- [Outro Nome](https://github.com/outro) — Desenvolvedor Frontend
-
----
-
-## 📄 Licença
-
-Este projeto está licenciado sob a [MIT License](LICENSE).
-
----
-
-## 💬 Contato
-
-Se tiver dúvidas, sugestões ou problemas, fique à vontade para abrir uma *issue* ou enviar um e-mail para **seuemail@exemplo.com**.
