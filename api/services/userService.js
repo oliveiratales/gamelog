@@ -17,8 +17,6 @@ class UserService {
       return null;
     }
 
-    await user.update({ lastLogin: new Date() });
-
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (!passwordMatch) {
       throw new Error("Senha incorreta");
@@ -27,6 +25,9 @@ class UserService {
     const token = jwt.sign({ id: user.id, email: user.email }, secretKey, {
       expiresIn: "1d",
     });
+
+    await user.update({ lastLogin: new Date() });
+    
     return { user, token };
   }
 
