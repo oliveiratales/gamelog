@@ -17,6 +17,8 @@ class UserService {
       return null;
     }
 
+    await user.update({ lastLogin: new Date() });
+
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (!passwordMatch) {
       throw new Error("Senha incorreta");

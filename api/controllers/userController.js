@@ -70,15 +70,19 @@ class UserController {
 
   static async updateUserById(req, res, next) {
     try {
-      const updatedUser = await UserService.updateUser(req.params.id, req.body);
+      const updatedUser = await UserService.updateUserById(req.params.id, req.body);
       if (!updatedUser) {
         const error = new Error("Usuário não encontrado");
         error.statusCode = 404;
         throw error;
       }
+
+      const userWithoutPassword = { ...updatedUser.dataValues };
+      delete userWithoutPassword.password;
+
       res.json({
         message: "Usuário atualizado com sucesso",
-        user: updatedUser,
+        user: userWithoutPassword,
       });
     } catch (error) {
       next(error);
@@ -87,7 +91,7 @@ class UserController {
 
   static async deleteUserById(req, res, next) {
     try {
-      const result = await UserService.inactivateUser(req.params.id);
+      const result = await UserService.deleteUserById(req.params.id);
       if (!result) {
         const error = new Error("Usuário não encontrado");
         error.statusCode = 404;
