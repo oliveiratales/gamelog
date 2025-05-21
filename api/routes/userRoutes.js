@@ -2,7 +2,7 @@ const express = require("express");
 const UserController = require("../controllers/userController");
 const router = express.Router();
 const validate = require("../middlewares/validateMiddleware");
-const { registerSchema, loginSchema } = require("../schemas/userSchemas");
+const { registerSchema, loginSchema, updateUserSchema, validateIdParam } = require("../schemas/userSchemas");
 
 /**
  * @swagger
@@ -143,7 +143,7 @@ router.get("/", UserController.getAllUsers);
  *       500:
  *         description: Erro interno no servidor
  */
-router.get("/:id", UserController.getUser);
+router.get("/:id", validateIdParam, UserController.getUserById);
 
 /**
  * @swagger
@@ -156,7 +156,7 @@ router.get("/:id", UserController.getUser);
  *         name: id
  *         required: true
  *         schema:
- *           type: integer
+ *           type: string
  *         description: ID do usuário a ser atualizado
  *     requestBody:
  *       required: true
@@ -188,7 +188,7 @@ router.get("/:id", UserController.getUser);
  *       500:
  *         description: Erro interno no servidor
  */
-router.put("/:id", UserController.updateUser);
+router.put("/:id", validateIdParam, validate(updateUserSchema), UserController.updateUserById);
 
 /**
  * @swagger
@@ -201,7 +201,7 @@ router.put("/:id", UserController.updateUser);
  *         name: id
  *         required: true
  *         schema:
- *           type: integer
+ *           type: string
  *         description: ID do usuário a ser inativado
  *     responses:
  *       200:
@@ -217,6 +217,6 @@ router.put("/:id", UserController.updateUser);
  *       500:
  *         description: Erro interno no servidor
  */
-router.delete("/:id", UserController.inactivateUser);
+router.delete("/:id", validateIdParam, UserController.deleteUserById);
 
 module.exports = router;

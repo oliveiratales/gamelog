@@ -1,9 +1,9 @@
 const express = require("express");
-const setupDatabase = require("./config/setup");
+const { setupDatabase } = require("./config/setup");
 const swaggerUi = require("swagger-ui-express");
 const swaggerSpec = require("./docs/swagger");
-const authenticateToken = require("./middlewares/authenticateToken");
-const errorHandler = require("./middlewares/errorHandler");
+const authenticateToken = require("./middlewares/authenticateTokenMiddleware");
+const errorHandler = require("./middlewares/errorHandlerMiddleware");
 
 require("dotenv").config();
 
@@ -19,7 +19,7 @@ if (process.env.NODE_ENV !== "production") {
 app.use((req, res, next) => {
   const publicPaths = ["/api/users/login", "/api/users/register"];
 
-  if (publicPaths.includes(req.path)) {
+  if (publicPaths.some((path) => req.path.startsWith(path))) {
     return next();
   }
 
@@ -32,7 +32,7 @@ app.use("/api", routes);
 
 // Rota 404
 app.use((req, res) => {
-  res.status(404).json({ error: "Rota não encontrada" });
+  res.status(404).json({ success: false, error: "Rota não encontrada" });
 });
 
 // Middleware de erros

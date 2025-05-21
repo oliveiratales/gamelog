@@ -11,8 +11,21 @@ class UserService {
     return user;
   }
 
-  static async getUserByEmail(email) {
-    return await User.findOne({ where: { email, active: true } });
+  static async authenticate(email, password) {
+    const user = await this.getUserByEmail(email);
+    if (!user) {
+      return null;
+    }
+
+    const passwordMatch = await bcrypt.compare(password, user.password);
+    if (!passwordMatch) {
+      throw new Error("Senha incorreta");
+    }
+
+    const token = jwt.sign({ id: user.id, email: user.email }, secretKey, {
+      expiresIn: "1d",
+    });
+    return { user, token };
   }
 
   static async getAllUsers(page = 1, limit = 10) {
@@ -32,38 +45,25 @@ class UserService {
     };
   }
 
+  static async getUserByEmail(email) {
+    return await User.findOne({ where: { email, active: true } });
+  }
+
   static async getUserById(id) {
     return await User.findOne({ where: { id, active: true } });
   }
 
-  static async authenticate(email, password) {
-    const user = await this.getUserByEmail(email);
-    if (!user) {
-      throw new Error("Usuário não encontrado");
-    }
-
-    const passwordMatch = await bcrypt.compare(password, user.password);
-    if (!passwordMatch) {
-      throw new Error("Senha incorreta");
-    }
-
-    const token = jwt.sign({ id: user.id, email: user.email }, secretKey, {
-      expiresIn: "1d",
-    });
-    return { user, token };
-  }
-
-  static async updateUser(id, data) {
+  static async updateUserById(id, data) {
     const user = await this.getUserById(id);
-    if (!user) throw new Error("Usuário não encontrado");
+    if (!user) return null;
 
     await user.update(data);
     return user;
   }
 
-  static async inactivateUser(id) {
+  static async deleteUserById(id) {
     const user = await this.getUserById(id);
-    if (!user) throw new Error("Usuário não encontrado");
+    if (!user) return null;
 
     await user.update({ active: false });
     return user;

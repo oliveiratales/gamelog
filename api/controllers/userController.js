@@ -12,7 +12,6 @@ class UserController {
         .status(201)
         .json({ message: "Usuário criado com sucesso.", userWithoutPassword });
     } catch (error) {
-      error.statusCode = error.statusCode;
       next(error);
     }
   }
@@ -21,6 +20,11 @@ class UserController {
     try {
       const { email, password } = req.body;
       const { user, token } = await UserService.authenticate(email, password);
+      if (!user) {
+        const error = new Error("Usuário não encontrado");
+        error.statusCode = 404;
+        throw error;
+      }
       const userWithoutPassword = { ...user.dataValues };
       delete userWithoutPassword.password;
 
@@ -30,9 +34,7 @@ class UserController {
         token,
       });
     } catch (error) {
-      if (error.message === "Usuário não encontrado") error.statusCode = 404;
-      else if (error.message === "Senha incorreta") error.statusCode = 401;
-      else error.statusCode = 500;
+      if (error.message === "Senha incorreta") error.statusCode = 401;
       next(error);
     }
   }
@@ -49,25 +51,24 @@ class UserController {
     }
   }
 
-  static async getUser(req, res, next) {
+  static async getUserById(req, res, next) {
     try {
       const user = await UserService.getUserById(req.params.id);
-      const userWithoutPassword = { ...user.dataValues };
-      delete userWithoutPassword.password;
-
       if (!user) {
         const error = new Error("Usuário não encontrado");
         error.statusCode = 404;
         throw error;
       }
+
+      const userWithoutPassword = { ...user.dataValues };
+      delete userWithoutPassword.password;
       res.json(userWithoutPassword);
     } catch (error) {
-      error.statusCode = error.statusCode;
       next(error);
     }
   }
 
-  static async updateUser(req, res, next) {
+  static async updateUserById(req, res, next) {
     try {
       const updatedUser = await UserService.updateUser(req.params.id, req.body);
       if (!updatedUser) {
@@ -80,12 +81,11 @@ class UserController {
         user: updatedUser,
       });
     } catch (error) {
-      error.statusCode = error.statusCode;
       next(error);
     }
   }
 
-  static async inactivateUser(req, res, next) {
+  static async deleteUserById(req, res, next) {
     try {
       const result = await UserService.inactivateUser(req.params.id);
       if (!result) {
@@ -95,7 +95,6 @@ class UserController {
       }
       res.json({ message: "Usuário inativado com sucesso" });
     } catch (error) {
-      error.statusCode = error.statusCode;
       next(error);
     }
   }
