@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootadmin
+      MYSQL_DATABASE: game_log_db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: admin
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - backend-network
+
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: api
+    ports:
+      - "3000:3000"
+    environment:
+      DB_HOST: mysql
+      DB_USER: user
+      DB_PASSWORD: admin
+      DB_NAME: game_log_db
+      JWT_SECRET: sua_chave_secreta
+      NODE_ENV: development
+      CLIENT_ID: twitch_client_id
+      CLIENT_SECRET: twitch_client_secret
+    depends_on:
+      - mysql
+    networks:
+      - backend-network
+
+volumes:
+  mysql-data:
+
+networks:
+  backend-network:
